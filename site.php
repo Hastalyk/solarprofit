@@ -245,7 +245,7 @@ $Investition = $_POST["Investition"];
           echo "Fehlerhafter Wert bei Angabe der Akkugröße des E-Autos, 50 kWh wurden angenommen.<br>";
         }
       if ($autarkiequote > 100 || $autarkiequote <= 0 || empty($autarkiequote)) {
-          $autarkiequote = 0.40;
+          $autarkiequote = 40;
           echo "Fehlerhafter Wert bei Angabe der Autarkiequote, 40% wurde angenommen. <br>";
         }
       if ($inflation > 100 || $inflation <= 0 || empty($inflation)) {
@@ -380,19 +380,27 @@ $Investition = $_POST["Investition"];
         <tr><th width = 200>Grundinformationen: </th></tr>
         <tr>
           <td width = 150>kWh pro Jahr:</td>
-          <td><?php echo "$kWh" ?></td>
+          <td align=right><?php echo "$kWh" ?>   </td>
+          <td align=left>kWh</td>
         </tr>
         <tr>
-          <td>Sparen bei <?php echo "$autarkiequote%" ?> Deckung:</td>
+          <td>Sparen bei <?php
+                    $autarkiequote =  $autarkiequote*100;
+                    echo "$autarkiequote%";
+                    $autarkiequote =  $autarkiequote/100;
+                  ?> Deckung:</td>
           <td><?php echo "$stromverbrauchsersparnis €" ?></td>
+          <td>EUR</td>
         </tr>
         <tr>
           <td>Einspeisevergütung:</td>
           <td><?php echo "$einspeiseverguetung €" ?></td>
+          <td>EUR</td>
         </tr>
         <tr>
           <td><b>Gesamt:</b></td>
           <td><b><?php echo "$Anlagetotal €" ?></b></td>
+          <td>EUR</td>
         </tr>
       </table>
 <br><br>
@@ -403,36 +411,39 @@ $Investition = $_POST["Investition"];
           <th width = 100>E-Auto:</th>
           <th></th>
           <th width = 100>Verbrenner:</th>
-          <th width = 150>Ersparnis:</th>
+          <th width = 100>Ersparnis:</th>
         </tr>
         <tr>
           <td>
         <div class="tooltip">Ladedauer/Tankzeit:<span class="tooltiptext">Wie viele Stunden sie im Jahr mit Tanken/Laden verbringen - Grundlage sind 20 Min je Schnelladevorgang, 5 min je Tankvorgang.</span></div></td>
-          <td>  <?php echo "$ladedauer" ?> h</td>
+          <td align=right>  <?php echo "$ladedauer" ?> h</td>
           <td></td>
-          <td>  <?php echo "$tankdauer" ?> h</td>
-          <td></td>
+          <td align=right>  <?php echo "$tankdauer" ?> h</td>
+          <td align=right> <?php
+              $ladediff = $ladedauer - $tankdauer;
+              echo "$ladediff h";
+              ?> </td>
         </tr>
         <tr>
           <td>Zuhaus geladen:</td>
-          <td> <?php echo "$dachtanken" ?> €</td>
+          <td align=right> <?php echo "$dachtanken" ?> €</td>
           <td></td>
           <td></td>
           <td></td>
         </tr>
         <tr>
           <td>Unterwegs geladen:</td>
-          <td> <?php echo "$netztanken" ?> €</td>
+          <td align=right> <?php echo "$netztanken" ?> €</td>
           <td></td>
           <td></td>
           <td></td>
         </tr>
         <tr>
           <td><b>Kosten für <?php echo "$kilometer" ?> km:</b></td>
-          <td><b> <?php echo "$emobilitaettotal" ?> €</b></td>
+          <td align=right><b> <?php echo "$emobilitaettotal" ?> €</b></td>
           <td></td>
-          <td><b> <?php echo "$verbrennermobilitaet" ?> €</b></td>
-          <td><b><?php echo "$umstiegersparnis" ?></b> €</td>
+          <td align=right><b> <?php echo "$verbrennermobilitaet" ?> €</b></td>
+          <td align=right><b><?php echo "$umstiegersparnis" ?></b> €</td>
         </tr>
       </table>
 
@@ -440,32 +451,32 @@ $Investition = $_POST["Investition"];
 
     <table>
       <tr>
-        <th width = 200>Akku:</th>
+        <th width = 180>Akku:</th>
         <th width = 150></th>
       </tr>
       <tr>
         <td>Ersparnis pro Jahr:</td>
-        <td> <?php echo "$speicherersparnis" ?> €</td>
+        <td align=right> <?php echo "$speicherersparnis" ?> €</td>
       </tr>
       <tr>
         <td>Ladeverluste:</td>
-        <td> <?php echo "$speicherereinspverluste" ?> €</td>
+        <td align=right> <?php echo "$speicherereinspverluste" ?> €</td>
       </tr>
       <tr>
         <td>Weniger Einspeisevergütung:</td>
-        <td> <?php echo "$speichererentggewinn" ?> €</td>
+        <td align=right> <?php echo "$speichererentggewinn" ?> €</td>
       </tr>
       <tr>
         <td><b>Nettoersparnis pro Jahr:</b></td>
-        <td><b> <?php echo "$speichertotalpa " ?> €</b></td>
+        <td align=right><b> <?php echo "$speichertotalpa " ?> €</b></td>
       </tr>
       <tr>
         <td><b>
           </b>
           <div class="tooltip">Max. mögliche Ersparnis:<span class="tooltiptext">Basierend auf einer max. Lebensdauer des Speichers von <?php echo "$gesamtzyklen" ?> Zyklen über <?php echo "$speicherleben" ?> Jahre.</span></div>
         </td>
-        <td><b> <?php echo "$speichergewver" ?> €</b></td>
-        <td><b> <?php echo "$gewver" ?> €</b></td>
+        <td align=right><b> <?php echo "$speichergewver" ?> €</b></td>
+        <td align=left><b> <?php echo "$gewver" ?> €</b></td>
       </tr>
     </table>
 
@@ -473,52 +484,57 @@ $Investition = $_POST["Investition"];
 
     <table>
       <tr>
-        <th width = 200>Pro Jahr</th>
+        <th width = 180>Pro Jahr</th>
         <th width = 150>Nach 10 Jahren</th>
         <th width = 150>Nach 20 Jahren</th>
         <th width = 150>Nach 30 Jahren</th>
       </tr>
       <tr>
         <td>Einspeisevergütung</td>
-        <td><?php echo"$restleinspeiseverguetung10"; ?>€ </td>
-        <td><?php echo"$restleinspeiseverguetung20"; ?>€ </td>
-        <td><?php echo"$restleinspeiseverguetung30"; ?>€ </td>
+        <td align=right><?php echo"$restleinspeiseverguetung10"; ?>€ </td>
+        <td align=right><?php echo"$restleinspeiseverguetung20"; ?>€ </td>
+        <td align=right><?php echo"$restleinspeiseverguetung30"; ?>€ </td>
       </tr>
       <tr>
         <td>Eigenverbrauch</td>
-        <td><?php echo"$stromverbrauchsersparnis10"; ?>€ </td>
-        <td><?php echo"$stromverbrauchsersparnis20"; ?>€ </td>
-        <td><?php echo"$stromverbrauchsersparnis30"; ?>€ </td>
+        <td align=right><?php echo"$stromverbrauchsersparnis10"; ?>€ </td>
+        <td align=right><?php echo"$stromverbrauchsersparnis20"; ?>€ </td>
+        <td align=right><?php echo"$stromverbrauchsersparnis30"; ?>€ </td>
       </tr>
       <tr>
         <td>E-Auto:</td>
-        <td><?php echo"$umstiegersparnis10"; ?>€ </td>
-        <td><?php echo"$umstiegersparnis20"; ?>€ </td>
-        <td><?php echo"$umstiegersparnis30"; ?>€ </td>
+        <td align=right><?php echo"$umstiegersparnis10"; ?>€ </td>
+        <td align=right><?php echo"$umstiegersparnis20"; ?>€ </td>
+        <td align=right><?php echo"$umstiegersparnis30"; ?>€ </td>
       </tr>
       <tr>
         <td>Akku:</td>
-        <td><?php echo"$akkuersparnis10"; ?>€ </td>
-        <td><?php echo"$akkuersparnis20"; ?>€ </td>
-        <td><?php echo"$akkuersparnis30"; ?>€ </td>
+        <td align=right><?php echo"$akkuersparnis10"; ?>€ </td>
+        <td align=right><?php echo"$akkuersparnis20"; ?>€ </td>
+        <td align=right><?php echo"$akkuersparnis30"; ?>€ </td>
       </tr>
       <tr>
         <td>Total:</td>
-        <td><?php echo"$total10"; ?>€ </td>
-        <td><?php echo"$total20"; ?>€ </td>
-        <td><?php echo"$total30"; ?>€ </td>
+        <td align=right><?php echo"$total10"; ?>€ </td>
+        <td align=right><?php echo"$total20"; ?>€ </td>
+        <td align=right><?php echo"$total30"; ?>€ </td>
       </tr>
       <tr>
         <td>Total nach Inflation:</td>
-        <td><?php echo"$total10inf"; ?>€ </td>
-        <td><?php echo"$total20inf"; ?>€ </td>
-        <td><?php echo"$total30inf"; ?>€ </td>
+        <td align=right><?php echo"$total10inf"; ?>€ </td>
+        <td align=right><?php echo"$total20inf"; ?>€ </td>
+        <td align=right><?php echo"$total30inf"; ?>€ </td>
       </tr>
       <tr>
-        <td>Abzüglich der Investition:</td>
-        <td><?php echo"$Investition10inf"; ?>€ </td>
-        <td><?php echo"$Investition20inf"; ?>€ </td>
-        <td><?php echo"$Investition30inf"; ?>€ </td>
+        <td>
+          <div class="tooltip">Incl. Inflation:<span class="tooltiptext">Eine jährliche Inflation von <?php
+                $inflation = $inflation*100;
+                echo "$inflation%";
+                $inflation = $inflation/100; ?> wurde angegeben.</span></div>
+        </td>
+        <td align=right><?php echo"$Investition10inf"; ?>€ </td>
+        <td align=right><?php echo"$Investition20inf"; ?>€ </td>
+        <td align=right><?php echo"$Investition30inf"; ?>€ </td>
       </tr>
 
     </table>
