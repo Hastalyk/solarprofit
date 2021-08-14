@@ -273,17 +273,29 @@ $Investition = $_POST["Investition"];
 
       /*Auto*/
       $emobilitaettotal = $kilometer/100 * $zhsgeladen * $kwheauto100km * $EE + $kilometer/100 * (1-$zhsgeladen) * $kwheauto100km * $NP;
+        /*Unter der Annahme, dass das E-Auto nur mit solaren Überschüssen zuhause geladen wird.
+            Benötigt weitere Ressourcen (evtl. verlinken), bisher gehe ich davon aus, dass 80% der kWh
+            aus der eigenen Solaranlage stammen können. Bei kleineren Solaranlagen kann das deutlich
+            weniger sein.*/
       $verbrennermobilitaet = $kilometer / 100 * $literauto100km * $spritpreis;
       $umstiegersparnis = $verbrennermobilitaet - $emobilitaettotal;
       $dachtanken = $kilometer/100 * $zhsgeladen * $kwheauto100km * $EE;
       $netztanken = $kilometer/100 * (1-$zhsgeladen) * $kwheauto100km * $NP;
+        /*Unter Netztanken wird angenommen, dass sowohl der Ladestrom für die Nacht als auch der
+            Ladestrom von unterwegs aus der Ladesäule sich ähneln. Hier besteht theoretisch
+            eine Optimierungsmöglichkeit, wenn man den Durchschnittspreis an Ladesäulen
+            ermitelt.*/
       $restleinspeiseverguetung = $einspeiseverguetung - $dachtanken;
+        /*Durch "Tanken vom Dach" sinkt natürlich die Einspeisevergütung.*/
       $kWhmobilitaet = $kilometer/100 * $zhsgeladen * $kwheauto100km;
       $zhsgeladenproz = $zhsgeladen*100;
       $woandersgeladproz = (1-$zhsgeladen)*100;
       $tankvorgaenge = $kilometer / 100 * $literauto100km / $tank;
       $tankdauer = 5 * $kilometer / 100 * $literauto100km / $tank / 60;
       $ladedauer = 20 * (1-$zhsgeladen) * $tankvorgaenge  / 60;
+        /*Ladevorgänge sind pauschal auf 5 Minuten beim klassischen Tanken und 20 Minuten beim
+            Laden and der Säule festgelegt. Theoretisch auch über den Anteil von "nicht zuhause"
+            und der Ladegeschwindigkeit festmachbar.*/
 
       /*Speicher*/
       $speicherersparnis = $speicherladzy * $speicherkapa * $NP;
@@ -297,6 +309,7 @@ $Investition = $_POST["Investition"];
 
       /*Totalberechnung*/
       $totalsolar = $jahre1 * $EE * $kWh + $jahre2 * $nachverguetung * $kWh * 0.90;
+        /*Die 0.9 als Unsicherheitsfaktor beibehalten?*/
       $totaljahre = $jahre1 + $jahre2;
       $totalumstiegsersparnis = $umstiegersparnis * $totaljahre;
       $restleinspeiseverguetungjahre = $restleinspeiseverguetung * ($jahre1 + $jahre2);
@@ -476,7 +489,7 @@ $Investition = $_POST["Investition"];
           <div class="tooltip">Max. mögliche Ersparnis:<span class="tooltiptext">Basierend auf einer max. Lebensdauer des Speichers von <?php echo "$gesamtzyklen" ?> Zyklen über <?php echo "$speicherleben" ?> Jahre.</span></div>
         </td>
         <td align=right><b> <?php echo "$speichergewver" ?> €</b></td>
-        <td align=left><b> <?php echo "$gewver" ?> €</b></td>
+        <td align=left><b> <?php echo "$gewver" ?></b></td>
       </tr>
     </table>
 
@@ -536,7 +549,6 @@ $Investition = $_POST["Investition"];
         <td align=right><?php echo"$Investition20inf"; ?>€ </td>
         <td align=right><?php echo"$Investition30inf"; ?>€ </td>
       </tr>
-
     </table>
 
       <style>
